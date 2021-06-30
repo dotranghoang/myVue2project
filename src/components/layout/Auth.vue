@@ -1,11 +1,5 @@
 <template>
-  <div>
-    <b-nav>
-      <ul>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-      </ul>
-    </b-nav>
+  <div class="auth">
     <router-view/>
   </div>
 </template>
@@ -17,5 +11,12 @@ export default {
 </script>
 
 <style scoped>
-
+.auth {
+  height: 100vh;
+  background: url('../../assets/background/ocean.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 </style>
