@@ -47,11 +47,30 @@
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
                   <base-input alternative
                               class="mb-3"
-                              prepend-icon="ni ni-hat-3"
-                              placeholder="Name"
+                              prepend-icon="ni ni-single-02"
+                              placeholder="Id (6-20 character)"
+                              name="id"
+                              :rules="{required: true , min: 6, max: 18}"
+                              v-model="model.id">
+                  </base-input>
+
+                  <base-input alternative
+                              class="mb-3"
+                              prepend-icon="ni ni-circle-08"
+                              placeholder="Your name"
                               name="Name"
-                              :rules="{required: true}"
+                              :rules="{required: false}"
                               v-model="model.name">
+                  </base-input>
+
+                  <base-input alternative
+                              class="mb-3"
+                              prepend-icon="ni ni-circle-08"
+                              placeholder="Your birthday"
+                              name="birthday"
+                              type="date"
+                              :rules="{required: false}"
+                              v-model="model.birthday">
                   </base-input>
 
                   <base-input alternative
@@ -65,15 +84,38 @@
 
                   <base-input alternative
                               class="mb-3"
+                              prepend-icon="ni ni-mobile-button"
+                              placeholder="Phone"
+                              name="Phone"
+                              :rules="{required: false}"
+                              v-model="model.phone">
+                  </base-input>
+
+                  <base-input alternative
+                              class="mb-3"
                               prepend-icon="ni ni-lock-circle-open"
-                              placeholder="password"
+                              placeholder="Password (6-20 character)"
                               type="password"
                               name="Password"
-                              :rules="{required: true, min: 6}"
+                              :rules="{required: true, min: 6 , max: 20}"
                               v-model="model.password">
                   </base-input>
-                  <div class="text-muted font-italic"><small>password strength: <span
-                    class="text-success font-weight-700">strong</span></small></div>
+
+                  <base-input alternative
+                              class="mb-3"
+                              prepend-icon="ni ni-lock-circle-open"
+                              placeholder="Confirm password"
+                              type="password"
+                              name="Confirm password"
+                              :rules="{required: true, min: 6 , max: 20}"
+                              v-model="model.confirmPassword">
+                  </base-input>
+                  <div class="text-muted font-italic" v-if="comparePassword">
+                    <small>Invalid:
+                      <span
+                        class="text-danger font-weight-700">Password and Confirm password not same</span>
+                    </small>
+                  </div>
                   <b-row class=" my-4">
                     <b-col cols="12">
                       <base-input :rules="{ required: { allowFalse: false } }" name=Privacy Policy>
@@ -96,22 +138,46 @@
   </div>
 </template>
 <script>
-
+import {register} from '@/services/AuthService';
+import moment from 'moment';
   export default {
     name: 'register',
     data() {
       return {
         model: {
-          name: '',
-          email: '',
-          password: '',
+          id: 'dotranghoang',
+          name: 'dotranghoang',
+          birthday: '2021-07-01',
+          email: 'hoangdt@infoplusvn.com',
+          phone: '0964785596',
+          password: 'Benhim123',
+          confirmPassword: 'Benhim123',
           agree: false
         }
       }
     },
+    computed: {
+      comparePassword() {
+        return this.model.password !== this.model.confirmPassword;
+      }
+    },
     methods: {
-      onSubmit() {
-        // this will be called only after form is valid. You can do an api call here to register users
+      async onSubmit() {
+        try {
+          const form = {
+            userName: this.model.id,
+            birthday: this.model.birthday,
+            userPassword: this.model.password,
+            phoneNumber: this.model.phone,
+            name: this.model.name,
+            email: this.model.email
+          }
+          console.log(form);
+          let dataRs = await register(form);
+          console.log('response: ',dataRs);
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
 
